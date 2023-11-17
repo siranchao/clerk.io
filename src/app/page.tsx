@@ -95,7 +95,7 @@ export default function Home() {
                   <span className="text-sm font-medium text-blue-600">Step 2</span>
                   <span className="text-xl font-semibold">Upload your PDF file</span>
                   <span className="mt-2 text-zinc-700">
-                    Clerk.io will process your file and make it available for conversation.
+                    Clerk.io will automatically process your file and make it available for chat.
                   </span>
                 </div>
               </li>
