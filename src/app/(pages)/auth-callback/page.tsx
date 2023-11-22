@@ -1,5 +1,4 @@
 "use client"
-
 import { useRouter, useSearchParams } from "next/navigation"
 import { trpc } from "@/app/_trpc/client"
 import { Loader2 } from "lucide-react"
@@ -10,7 +9,7 @@ export default function AuthCallback() {
     const origin = params.get("origin")
 
     //query from trpc client
-    const { data, isLoading } = trpc.authCallback.useQuery(undefined, {
+    trpc.authCallback.useQuery(undefined, {
         onSuccess: (data) => {
             if(data.success) {
                 //user is synced to db
