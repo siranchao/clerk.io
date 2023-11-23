@@ -66,13 +66,13 @@ export function DashboardContent() {
                                     N/A
                                 </div>
 
-                                <Button size="sm" className="w-full" variant="destructive" onClick={() => deleteFile({ id: file.id })}>
+                                <Button size="sm" className="w-full flex flex-row items-center gap-2" variant="destructive" onClick={() => deleteFile({ id: file.id })}>
                                     {isDeleting === file.id ? (
                                         <Loader2 className="h-4 w-4 animate-spin" />
                                     ) : (
                                         <Trash className="h-4 w-4" />
                                     )}
-                                    Delete
+                                    <span>Delete</span>
                                 </Button>
                             </div>
 
