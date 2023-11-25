@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import './globals.css'
 import 'react-loading-skeleton/dist/skeleton.css'
+import 'simplebar-react/dist/simplebar.min.css'
 
 import Navbar from '@/components/layout/Navbar'
 import TRPCProvider from '@/components/providers/TRPCProvider'
