@@ -1,12 +1,18 @@
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Send } from "lucide-react"
+import { useContext, useRef } from "react"
+import { ChatContext } from "./ChatContext"
 
 interface ChatInputProps {
     isDisabled?: boolean
 }
 
 export function ChatInput( { isDisabled }: ChatInputProps ) {
+    
+    const {addMessage, handleInputChange, isLoading, message} = useContext(ChatContext)
+
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     return (
         <>
@@ -16,14 +22,35 @@ export function ChatInput( { isDisabled }: ChatInputProps ) {
                         <div className="relative flex flex-col w-full flex-grow p-4">
                             <div className="relative">
                                 <Textarea 
+                                    ref={textareaRef}
                                     rows={1} 
                                     maxRows={4} 
                                     placeholder="Enter your question..." 
                                     autoFocus
+                                    onChange={handleInputChange}
+                                    value={message}
+                                    onKeyDown={(e) => {
+                                        if(e.key === "Enter" && !e.shiftKey) {
+                                            e.preventDefault()
+                                            addMessage()                               
+                                            //auto focus after submit message by keydown
+                                            textareaRef.current?.focus()
+                                        }
+                                    }}
                                     className="resize-none pr-12 text-base py-3 scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
                                 />
 
-                                <Button className="absolute bottom-1.5 right-[8px]" aria-label="Send message">
+                                <Button 
+                                    className="absolute bottom-1.5 right-[8px]" 
+                                    aria-label="Send message" 
+                                    disabled={isDisabled || isLoading}
+                                    type="submit"
+                                    onClick={() => {
+                                        addMessage()
+                                        //auto focus after submit message by click
+                                        textareaRef.current?.focus()
+                                    }}
+                                >
                                     <Send className="h-4 w-4"/>
                                 </Button>
                             </div>
