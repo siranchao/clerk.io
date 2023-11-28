@@ -1,6 +1,10 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { db } from "@/db";
+import { PDFLoader } from "langchain/document_loaders/fs/pdf";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import pinecone from "@/lib/pinecone";
+import { PineconeStore } from "langchain/vectorstores/pinecone";
 
  
 const f = createUploadthing();
@@ -31,6 +35,51 @@ export const ourFileRouter = {
                 uploadStatus: "PROCESSING"
             }
         })
+
+        try {
+            //retrieve blob file
+            const res = await fetch(`https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`)
+            const blob = await res.blob()
+
+            //load pdf into memory(langchain)
+            const loader = new PDFLoader(blob)
+            const docs = await loader.load()
+            //const pagesAmt = pageLevelDocs.length //TODO: NEW FEATURE
+
+            //vectorize and index entire document
+            const pineconeIndex = pinecone.index("clerkio")
+
+            const embeddings = new OpenAIEmbeddings({
+                openAIApiKey: process.env.OPENAI_API_KEY
+            })
+
+            //important!
+            await PineconeStore.fromDocuments(docs, embeddings, {
+                pineconeIndex,
+                //namespace: createdFile.id  //TODO: NEW FEATURE namespace not supported for free plan
+            })
+            
+            //update file status
+            await db.file.update({
+                data: {
+                    uploadStatus: "SUCCESS"
+                },
+                where: {
+                    id: createdFile.id
+                }
+            })
+
+        } catch(error) {
+            console.log(error)
+            await db.file.update({
+                data: {
+                    uploadStatus: "FAILED"
+                },
+                where: {
+                    id: createdFile.id
+                }
+            })
+        }
         
     }),
 } satisfies FileRouter;
