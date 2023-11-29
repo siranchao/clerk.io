@@ -3,14 +3,18 @@ import { trpc } from "@/app/_trpc/client"
 import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query"
 import { Loader2, MessagesSquare } from "lucide-react"
 import Skeleton from "react-loading-skeleton"
-import { Message } from "./Message"
+import Message from "./Message"
 import { ExtendedMessage } from "@/types/message"
+import { useContext, useRef, useEffect } from "react"
+import { ChatContext } from "./ChatContext"
+import { useIntersection } from "@mantine/hooks";
 
 interface MessagesProps {
     fileId: string
 }
 
 export function Messages({ fileId }: MessagesProps) {
+    const {isLoading: isChatLoading} = useContext(ChatContext)
 
     const {data, isLoading, fetchNextPage} = trpc.getFileMessages.useInfiniteQuery({ 
         fileId, 
@@ -34,9 +38,23 @@ export function Messages({ fileId }: MessagesProps) {
     }
 
     const combinedMessages = [
-        ...(true ? [loadingMessage] : []),
+        ...(isChatLoading ? [loadingMessage] : []),
         ...(messages ?? [])
     ]
+
+    //monitor intersection on scrolling for initial query
+    const lastMessageRef = useRef<HTMLDivElement>(null)
+    const {ref, entry} = useIntersection({
+        root: lastMessageRef.current,
+        threshold: 1
+    })
+
+    useEffect(() => {
+        if(entry?.isIntersecting) {
+            fetchNextPage()
+        }
+    }, [entry, fetchNextPage])
+
 
     return (
         <>
@@ -44,9 +62,10 @@ export function Messages({ fileId }: MessagesProps) {
                 {combinedMessages && combinedMessages.length > 0 ? (
                     combinedMessages.map((msg, index) => {
                         const isNextMessageSamePerson = combinedMessages[index - 1]?.isUserMessage === combinedMessages[index]?.isUserMessage
-
+                        // Last Message
                         if(index === combinedMessages.length - 1) {
                             return <Message 
+                                    ref={ref}
                                     message={msg}
                                     isNextMessageSamePerson={isNextMessageSamePerson} 
                                     key={msg.id}
