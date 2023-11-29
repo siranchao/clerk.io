@@ -1,3 +1,4 @@
+"use client"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Send } from "lucide-react"
@@ -45,7 +46,8 @@ export function ChatInput( { isDisabled }: ChatInputProps ) {
                                     aria-label="Send message" 
                                     disabled={isDisabled || isLoading}
                                     type="submit"
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.preventDefault()
                                         addMessage()
                                         //auto focus after submit message by click
                                         textareaRef.current?.focus()
