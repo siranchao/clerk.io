@@ -1,21 +1,20 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation"
 import { db } from "@/db"
 import { DashboardContent } from "./components/DashboardContent"
 
 
 export default async function Dashboard() {
-    const { getUser } = getKindeServerSession()
-    const user = await getUser()
+    const { userId } = auth()
 
     //ensure user is logged in
-    if(!user || !user.id) {
+    if(!userId) {
         redirect("/auth-callback?origin=dashboard")
     }
     
     const dbUser = await db.user.findFirst({
         where: {
-            id: user.id
+            id: userId
         }
     })
 

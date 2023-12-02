@@ -1,4 +1,4 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+import { auth } from "@clerk/nextjs";
 import { notFound, redirect } from "next/navigation"
 import { db } from "@/db"
 import { PdfRender } from "./components/pdf/PdfRender"
@@ -12,11 +12,10 @@ interface PageProps {
 
 export default async function FilePage({ params }: PageProps) {
     const { fileId } = params
-    const { getUser } = getKindeServerSession()
-    const user = await getUser()
+    const { userId } = auth()
 
     //ensure user is logged in
-    if(!user || !user.id) {
+    if(!userId) {
         redirect(`/auth-callback?origin=dashboard/${fileId}`)
     }
 
@@ -24,7 +23,7 @@ export default async function FilePage({ params }: PageProps) {
     const file = await db.file.findFirst({
         where: {
             id: fileId,
-            userId: user.id
+            userId: userId
         }
     })
 

@@ -1,13 +1,12 @@
 import { buttonVariants } from "../ui/button"
 import MaxWidthWrapper from "./MaxWidthWrapper"
 import Link from "next/link"
-import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs/server"
 import { ArrowRight } from "lucide-react"
-
-
+import { auth } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
-    
+    const { userId } = auth()
 
     return (
         <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all" >
@@ -24,13 +23,20 @@ const Navbar = () => {
                             Pricing
                         </Link>
 
-                        <LoginLink className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-                            Sign in
-                        </LoginLink>
-                      
-                        <RegisterLink className={buttonVariants({ size: 'sm' })}>
-                            Get started <ArrowRight className="ml-1.5 h-5 w-5" />
-                        </RegisterLink>
+                        <Link href='/dashboard' className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+                            Dashboard
+                        </Link>
+
+                        <div>
+                            {userId ? (
+                                <UserButton afterSignOutUrl="/"/>
+                            ) : (
+                                <Link href='/sign-in' className={buttonVariants({ size: 'sm' })}>
+                                    Sign in <ArrowRight className="ml-1.5 h-5 w-5" />
+                                </Link>
+                            )}
+                        </div>
+
                     </div>
                 </div>
             </MaxWidthWrapper>

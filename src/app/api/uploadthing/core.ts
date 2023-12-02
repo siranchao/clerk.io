@@ -1,5 +1,5 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+import { auth } from "@clerk/nextjs";
 import { db } from "@/db";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
@@ -15,15 +15,14 @@ export const ourFileRouter = {
   pdfUploader: f({ pdf: { maxFileSize: "4MB" } })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
-        const { getUser } = getKindeServerSession()
-        const user = await getUser()
+        const { userId } = auth()
 
         //ensure user is logged in
-        if(!user || !user.id) {
+        if(!userId) {
             throw new Error("Unauthorized")
         }
     
-        return { userId: user.id };
+        return { userId: userId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
         const createdFile = await db.file.create({

@@ -5,6 +5,7 @@ import './globals.css'
 import 'react-loading-skeleton/dist/skeleton.css'
 import 'simplebar-react/dist/simplebar.min.css'
 
+import { ClerkProvider } from '@clerk/nextjs'
 import Navbar from '@/components/layout/Navbar'
 import TRPCProvider from '@/components/providers/TRPCProvider'
 import { Toaster } from '@/components/ui/toaster'
@@ -23,14 +24,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <TRPCProvider>
-        <body className={cn("min-h-screen font-sans antialiased grainy", inter.className)}>
-          <Toaster />
-          <Navbar /> 
-          {children}
-        </body>
-      </TRPCProvider>
-    </html>
+    <ClerkProvider>
+
+      <html lang="en">
+        <TRPCProvider>
+          <body className={cn("min-h-screen font-sans antialiased grainy", inter.className)}>
+            <Toaster />
+            <Navbar /> 
+            <div className='mb-20'>
+              {children}
+            </div>
+          </body>
+        </TRPCProvider>
+      </html>
+
+    </ClerkProvider>
   )
 }

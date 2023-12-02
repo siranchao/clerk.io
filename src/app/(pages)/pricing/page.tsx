@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/tooltip'
 import { PLANS } from '@/config/stripe'
 import { cn } from '@/lib/utils'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { auth } from "@clerk/nextjs";
 import {
   ArrowRight,
   Check,
@@ -20,9 +20,8 @@ import Link from 'next/link'
 
 
 
-export default async function Pricing() {
-    const { getUser } = getKindeServerSession()
-    const user = await getUser()
+export default function Pricing() {
+    const { userId } = auth()
 
     const pricingItems = [
         {
@@ -214,16 +213,16 @@ export default async function Pricing() {
                                 {plan === 'Free' ? (
                                 <Link
                                     href={
-                                    user ? '/dashboard' : '/sign-in'
+                                    userId ? '/dashboard' : '/sign-in'
                                     }
                                     className={buttonVariants({
                                     className: 'w-full',
                                     variant: 'secondary',
                                     })}>
-                                    {user ? 'Upgrade now' : 'Sign up'}
+                                    {userId ? 'Upgrade now' : 'Sign up'}
                                     <ArrowRight className='h-5 w-5 ml-1.5' />
                                 </Link>
-                                ) : user ? (
+                                ) : userId ? (
                                 <UpgradeButton />
                                 ) : (
                                 <Link
@@ -231,7 +230,7 @@ export default async function Pricing() {
                                     className={buttonVariants({
                                     className: 'w-full',
                                     })}>
-                                    {user ? 'Upgrade now' : 'Sign up'}
+                                    {userId ? 'Upgrade now' : 'Sign up'}
                                     <ArrowRight className='h-5 w-5 ml-1.5' />
                                 </Link>
                                 )}

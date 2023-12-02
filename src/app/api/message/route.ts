@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+import { auth } from "@clerk/nextjs";
 import { SendMessageValidator } from "@/lib/validators/SendMessageValidator";
 import { db } from "@/db";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
@@ -13,12 +13,11 @@ export const POST = async (req: NextRequest) => {
     const body = await req.json();
 
     //check user authorization
-    const { getUser } = getKindeServerSession()
-    const user = await getUser()
-    if(!user || !user.id) {
+    const { userId } = auth()
+
+    if(!userId) {
         return new Response("Unauthorized", { status: 401 })
     }
-    const { id: userId } = user
     
     //validate message and find file
     const {fileId, message} = SendMessageValidator.parse(body);
