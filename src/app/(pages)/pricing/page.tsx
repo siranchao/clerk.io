@@ -17,11 +17,13 @@ import {
   Minus,
 } from 'lucide-react'
 import Link from 'next/link'
+import { getUserSubscriptionPlan } from '@/lib/stripe'
 
 
 
-export default function Pricing() {
+export default async function Pricing() {
     const { userId } = auth()
+    const subscriptionPlan = await getUserSubscriptionPlan()
 
     const pricingItems = [
         {
@@ -119,7 +121,7 @@ export default function Pricing() {
                             )}>
                             {plan === 'Pro' && (
                                 <div className='absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-3 py-2 text-sm font-medium text-white'>
-                                Upgrade now
+                                {subscriptionPlan?.isSubscribed ? 'Subscribed' : "Upgrade Now"}
                                 </div>
                             )}
         
@@ -213,27 +215,35 @@ export default function Pricing() {
                                 {plan === 'Free' ? (
                                 <Link
                                     href={
-                                    userId ? '/dashboard' : '/sign-in'
+                                    !userId ? '/sign-in' : subscriptionPlan?.isSubscribed ? '/dashboard/billing' : '/dashboard'
                                     }
                                     className={buttonVariants({
                                     className: 'w-full',
                                     variant: 'secondary',
                                     })}>
-                                    {userId ? 'Upgrade now' : 'Sign up'}
+                                    {!userId ? 'Sign up' : subscriptionPlan?.isSubscribed ? 'Change Plan' : 'Current Plan'}
                                     <ArrowRight className='h-5 w-5 ml-1.5' />
                                 </Link>
-                                ) : userId ? (
-                                <UpgradeButton />
-                                ) : (
-                                <Link
-                                    href='/sign-in'
-                                    className={buttonVariants({
-                                    className: 'w-full',
-                                    })}>
-                                    {userId ? 'Upgrade now' : 'Sign up'}
-                                    <ArrowRight className='h-5 w-5 ml-1.5' />
-                                </Link>
-                                )}
+                                ) : !userId ? (
+                                    <Link
+                                        href='/sign-in'
+                                        className={buttonVariants({
+                                        className: 'w-full',
+                                        })}>
+                                        Sign up
+                                        <ArrowRight className='h-5 w-5 ml-1.5' />
+                                    </Link>
+                                ) : subscriptionPlan?.isSubscribed ? (
+                                    <Link
+                                        href='/dashboard'
+                                        className={buttonVariants({
+                                        className: 'w-full',
+                                        variant: 'secondary',
+                                        })}>
+                                        Current Plan
+                                        <ArrowRight className='h-5 w-5 ml-1.5' />
+                                    </Link>
+                                ) : <UpgradeButton />}
                             </div>
                         </div>
                     )

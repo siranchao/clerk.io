@@ -12,7 +12,7 @@ export default function Home() {
         
         <div className='mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border border-gray-200 bg-white px-7 py-2 shadow-md backdrop-blur transition-all hover:border-gray-300 hover:bg-white/50'>
           <p className='text-sm font-semibold text-gray-700'>
-            Clerk.io is now public!
+            Powered by OpenAI
           </p>
         </div>
         <h1 className='max-w-4xl text-5xl font-bold md:text-6xl lg:text-7xl'>
@@ -75,7 +75,7 @@ export default function Home() {
                 Start chatting in minutes
               </h2>
               <p className="mt-4 text-lg text-gray-600">
-                Chatting to your PDF file is as easy as 1-2-3
+                Talking to your PDF file is as easy as 1-2-3
               </p>
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function Home() {
                   <span className="text-sm font-medium text-blue-600">Step 3</span>
                   <span className="text-xl font-semibold">Start asking questions</span>
                   <span className="mt-2 text-zinc-700">
-                    It&apos;s that simple! Try out Clerk.io today and start chatting in less than a minute.
+                    Our Generative AI will give you accurate answers based on your file context.
                   </span>
                 </div>
               </li>

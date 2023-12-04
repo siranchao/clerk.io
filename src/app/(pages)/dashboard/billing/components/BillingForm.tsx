@@ -16,6 +16,8 @@ interface BillingFormProps {
 export default function BillingForm({ subscriptionPlan }: BillingFormProps) {
     const { toast } = useToast();
 
+    console.log(subscriptionPlan);
+
     const {mutate: createStripeSession, isLoading} = trpc.createStripeSession.useMutation({
         onSuccess: ({ url }) => {
             if(url) {
@@ -42,14 +44,14 @@ export default function BillingForm({ subscriptionPlan }: BillingFormProps) {
                     <CardHeader>
                         <CardTitle>Subscription Plan</CardTitle>
                         <CardDescription>
-                            You are currently on the <strong>{subscriptionPlan.name}</strong> plan
+                            You are currently on the <strong>{subscriptionPlan?.isSubscribed ? 'Pro' : 'Free'}</strong> plan
                         </CardDescription>
                     </CardHeader>
 
                     <CardFooter className='flex flex-col items-start space-y-2 md:flex-row md:justify-between md:space-x-0'>
                         <Button type='submit'>
                             {isLoading && <Loader2 className='mr-4 h-4 w-4 animate-spin' />}
-                            {subscriptionPlan.isSubscribed ? 'Manage Subscription' : 'Upgrade To Pro'} 
+                            {subscriptionPlan?.isSubscribed ? 'Manage Subscription' : 'Upgrade To Pro'} 
                         </Button>
 
                         {subscriptionPlan.isSubscribed && (
