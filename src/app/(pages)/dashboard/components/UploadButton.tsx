@@ -142,7 +142,7 @@ const UploadZone = ({ isSubscribed }: { isSubscribed?: boolean }) => {
                                 <p className="mb-2 text-sm text-zinc-700">
                                     <span className="font-semibold">Click to upload</span> or drag and drop
                                 </p>
-                                <p className="text-xs text-zinc-500">PDF (up to 4MB)</p>
+                                <p className="text-xs text-zinc-500">{isSubscribed ? "PDF file up to 25 pages with max size of 16MB" : "PDF file up to 5 pages with max size of 4MB"}</p>
                             </div>
 
                             {acceptedFiles && acceptedFiles[0] ? (

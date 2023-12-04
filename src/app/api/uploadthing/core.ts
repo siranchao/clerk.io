@@ -5,14 +5,15 @@ import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import pinecone from "@/lib/pinecone";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
-
+import { getUserSubscriptionPlan } from "@/lib/stripe";
+import { PLANS } from "@/config/stripe";
  
 const f = createUploadthing();
  
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  pdfUploader: f({ pdf: { maxFileSize: "4MB" } })
+  pdfUploader: f({ pdf: { maxFileSize: "16MB" } })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
         const { userId } = auth()
@@ -21,8 +22,10 @@ export const ourFileRouter = {
         if(!userId) {
             throw new Error("Unauthorized")
         }
+
+        const subscriptionPlan = await getUserSubscriptionPlan()
     
-        return { userId: userId };
+        return { userId: userId, subscriptionPlan };
     })
     .onUploadComplete(async ({ metadata, file }) => {
         const createdFile = await db.file.create({
@@ -43,7 +46,24 @@ export const ourFileRouter = {
             //load pdf into memory(langchain)
             const loader = new PDFLoader(blob)
             const docs = await loader.load()
-            //const pagesAmt = pageLevelDocs.length //TODO: NEW FEATURE
+            const pagesAmt = docs.length 
+
+            //check if pages number exceeded pro plan
+            const { subscriptionPlan } = metadata
+            const { isSubscribed } = subscriptionPlan
+            const isProExceeded = pagesAmt > PLANS.find(plan => plan.name === 'Pro')!.pageLimit
+            const isFreeExceeded = pagesAmt > PLANS.find(plan => plan.name === 'Free')!.pageLimit
+
+            if((isSubscribed && isProExceeded) || (!isSubscribed && isFreeExceeded)) {
+                await db.file.update({
+                    data: {
+                        uploadStatus: "FAILED"
+                    },
+                    where: {
+                        id: createdFile.id
+                    }
+                })
+            }
 
             //vectorize and index entire document
             const pineconeIndex = pinecone.index("clerkio")

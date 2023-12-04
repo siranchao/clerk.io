@@ -19,7 +19,7 @@ export default function Home() {
           Chat with your <span className='text-blue-600'>documents</span> in seconds.
         </h1>
         <p className='mt-5 max-w-prose text-zinc-700 sm:text-lg'>
-          Clerk.io is an AI assistant allows you to have conversations with any PDF documents. Simply upload your file and start asking questions.
+          Clerk.io is an AI assistant allows you to chat with any PDF documents. Simply upload your file and start asking questions.
         </p>
 
         <Link href='/dashboard' className={buttonVariants({

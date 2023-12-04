@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export function constructMetadata({
-    title = "clerk.io - the AI assistant helps you chat with your PDFs",
+    title = "clerk.io - AI powered document chatbot",
     description = "clerk.io is an open-source software to use AI and LLM to process and analyze PDF files. It allows you to chat with AI based on your document contexts.",
     image = "/thumbnail.png",
     icons = "/favicon.ico",

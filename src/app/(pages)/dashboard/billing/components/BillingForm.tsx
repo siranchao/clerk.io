@@ -16,8 +16,6 @@ interface BillingFormProps {
 export default function BillingForm({ subscriptionPlan }: BillingFormProps) {
     const { toast } = useToast();
 
-    console.log(subscriptionPlan);
-
     const {mutate: createStripeSession, isLoading} = trpc.createStripeSession.useMutation({
         onSuccess: ({ url }) => {
             if(url) {

@@ -31,7 +31,7 @@ const Navbar = async () => {
                                     <Menu className='h-6 w-6 cursor-pointer mx-2'/>
                                 </DropdownMenuTrigger>
 
-                                <DropdownMenuContent className='bg-white' align='end'>
+                                <DropdownMenuContent className='bg-white w-40 p-2' align='end'>
                                     <DropdownMenuItem asChild className="cursor-pointer">
                                         <Link href='/'>Home</Link>
                                     </DropdownMenuItem>

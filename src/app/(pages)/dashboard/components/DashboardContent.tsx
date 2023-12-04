@@ -61,12 +61,12 @@ export function DashboardContent({ isSubscribed }: DashboardContentProps) {
                             <div className="px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
                                 <div className="flex items-center gap-2">
                                     <Plus className="h-4 w-4" />
-                                    {format(new Date(file.createdAt), "dd MMM yyyy")}
+                                    {format(new Date(file.createdAt), "dd MMM yy")}
                                 </div>
 
                                 <div className="flex items-center gap-2">
                                     <MessageSquare className="h-4 w-4" />
-                                    N/A
+                                    {file.uploadStatus === "SUCCESS" ? "Ready" : "Pending"}
                                 </div>
 
                                 <Button size="sm" className="w-full flex flex-row items-center gap-2" variant="destructive" onClick={() => deleteFile({ id: file.id })}>
