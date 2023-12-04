@@ -1,11 +1,18 @@
 import { buttonVariants } from "../ui/button"
 import MaxWidthWrapper from "./MaxWidthWrapper"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Menu } from "lucide-react"
 import { auth } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
-const Navbar = () => {
+const Navbar = async () => {
     const { userId } = auth()
 
     return (
@@ -16,16 +23,41 @@ const Navbar = () => {
                         <span>Clerk.io</span>
                     </Link>
 
-                    {/* todo: add mobile nav */}
+                    {/* Mobile nav menu */}
+                    <div className="items-center space-x-4 flex sm:hidden">
+                        <div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Menu className='h-6 w-6 cursor-pointer mx-2'/>
+                                </DropdownMenuTrigger>
 
-                    <div className="hidden items-center space-x-4 sm:flex">
-                        <Link href='/pricing' className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-                            Pricing
-                        </Link>
+                                <DropdownMenuContent className='bg-white' align='end'>
+                                    <DropdownMenuItem asChild className="cursor-pointer">
+                                        <Link href='/'>Home</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
 
-                        <Link href='/dashboard' className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-                            Dashboard
-                        </Link>
+                                    <DropdownMenuItem asChild className="cursor-pointer">
+                                        <Link href='/pricing'>Pricing</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+
+                                    <DropdownMenuItem asChild className="cursor-pointer">
+                                        <Link href='/dashboard'>Dashboard</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+
+                                    {userId && (
+                                        <>
+                                            <DropdownMenuItem asChild className="cursor-pointer">
+                                                <Link href='/dashboard/billing'>Billing</Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                        </>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
 
                         <div>
                             {userId ? (
@@ -36,7 +68,33 @@ const Navbar = () => {
                                 </Link>
                             )}
                         </div>
+                    </div>
 
+                    {/* Desktop nav menu */}
+                    <div className="hidden items-center space-x-4 sm:flex">
+                        <Link href='/pricing' className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+                            Pricing
+                        </Link>
+
+                        <Link href='/dashboard' className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+                            Dashboard
+                        </Link>
+
+                        {userId && (
+                            <Link href='/dashboard/billing' className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+                                Billing
+                            </Link>
+                        )}
+
+                        <div>
+                            {userId ? (
+                                <UserButton afterSignOutUrl="/"/>
+                            ) : (
+                                <Link href='/sign-in' className={buttonVariants({ size: 'sm' })}>
+                                    Sign in <ArrowRight className="ml-1.5 h-5 w-5" />
+                                </Link>
+                            )}
+                        </div>
                     </div>
                 </div>
             </MaxWidthWrapper>
