@@ -3,15 +3,18 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import Dropzone from "react-dropzone"
+import Dropzone, { FileRejection } from "react-dropzone"
 import { Cloud, File, Loader2 } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { useUploadThing } from "@/lib/uploadthing"
 import { useToast } from "@/components/ui/use-toast"
 import { trpc } from "@/app/_trpc/client"
 
+interface UploadButtonProps {
+    isSubscribed?: boolean
+}
 
-export function UploadButton() {
+export function UploadButton({ isSubscribed }: UploadButtonProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
 
@@ -28,7 +31,7 @@ export function UploadButton() {
                 </DialogTrigger>
 
                 <DialogContent>
-                    <UploadZone />
+                    <UploadZone isSubscribed={isSubscribed}/>
                 </DialogContent>
             </Dialog>
 
@@ -37,7 +40,7 @@ export function UploadButton() {
 }
 
 
-const UploadZone = () => {
+const UploadZone = ({ isSubscribed }: { isSubscribed?: boolean }) => {
     const router = useRouter()
     const [isUploading, setIsUploading] = useState<boolean>(false)
     const [uploadProgress, setUploadProgress] = useState<number>(0)
@@ -69,8 +72,10 @@ const UploadZone = () => {
 
     return (
         <Dropzone 
+            accept={{'application/pdf': ['.pdf']}}
+            maxSize={isSubscribed ? 1048576 * 16 : 1048576 * 4} 
             multiple={false} 
-            onDrop={async (acceptedFiles) => {
+            onDropAccepted={async (acceptedFiles) => {
                 setIsUploading(true)
                 const progressInterval = startUploadProgress()
 
@@ -97,8 +102,32 @@ const UploadZone = () => {
 
                 clearInterval(progressInterval)
                 setUploadProgress(100)
-
                 startPolling({ key })
+            }}
+            onDropRejected={(fileRejections: FileRejection[]) => {
+                if(fileRejections[0].errors[0].code === "file-too-large") {
+                    toast({
+                        title: "File is too large",
+                        description: isSubscribed ? "Pro user allows up to 16MB file size" : "Free user allows up to 4MB file size",
+                        variant: "destructive"
+                    })
+                }
+                else if(fileRejections[0].errors[0].code === "file-invalid-type") {
+                    if(fileRejections[0].errors[0].code === "file-invalid-type") {
+                        toast({
+                            title: "Invalid file type",
+                            description: "Only PDF files are allowed",
+                            variant: "destructive"
+                        })
+                    }
+                }
+                else {
+                    toast({
+                        title: "Unable to upload file",
+                        description: "Please try again later",
+                        variant: "destructive"
+                    })
+                }
             }}
         >
             {({ getRootProps, getInputProps, acceptedFiles }) => (

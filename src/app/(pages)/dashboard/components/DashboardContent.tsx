@@ -8,8 +8,11 @@ import Link from "next/link"
 import { format } from "date-fns"
 import { useState } from "react"
 
+interface DashboardContentProps {
+    isSubscribed?: boolean
+}
 
-export function DashboardContent() {
+export function DashboardContent({ isSubscribed }: DashboardContentProps) {
     const [isDeleting, setIsDeleting] = useState<string | null>(null)
 
     //fetch user's file data using trpc query
@@ -35,7 +38,7 @@ export function DashboardContent() {
             <div className="mt-8 flex flex-col items-center justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0">
                 <h1 className="mb-3 font-bold text-5xl text-gray-900">My Files</h1>
 
-                <UploadButton />
+                <UploadButton isSubscribed={isSubscribed}/>
             </div>
 
             {/* display all user files */}

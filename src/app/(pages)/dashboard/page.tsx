@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation"
 import { db } from "@/db"
 import { DashboardContent } from "./components/DashboardContent"
+import { getUserSubscriptionPlan } from "@/lib/stripe"
 
 
 export default async function Dashboard() {
@@ -23,9 +24,11 @@ export default async function Dashboard() {
         redirect("/auth-callback?origin=dashboard")
     }
 
+    const subscriptionPlan = await getUserSubscriptionPlan();
+
     return (
         <>
-            <DashboardContent />
+            <DashboardContent isSubscribed={subscriptionPlan?.isSubscribed}/>
         </>
     )
 }
