@@ -8,6 +8,7 @@ import { absoluteUrl } from '@/lib/utils';
 import { getUserSubscriptionPlan } from '@/lib/stripe';
 import { stripe } from '@/lib/stripe';
 import { PLANS } from '@/config/stripe';
+import { utapi } from 'uploadthing/server';
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async() => {
@@ -68,6 +69,8 @@ export const appRouter = router({
     if(!file) {
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
+
+    await utapi.deleteFiles(file.key)
 
     await db.file.delete({
       where: {
