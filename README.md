@@ -1,6 +1,51 @@
+# Clerk.io - AI powered document chatbot
+
+- Clerk.io is an open-source software to use AI and LLM to process and analyze PDF files. It allows you to chat with AI based on your document contexts.
+- This project is built with the TypeScript, React, Next 13.5 App Router, tRPC, Prisma & Tailwind etc.
+- App URL: [https://clerk-io.vercel.app](https://clerk-io.vercel.app/)
+
+![Project Image](https://res.cloudinary.com/siran-chao/image/upload/v1701813863/Clerk.io/thumbnail_zy42h6.png)
+
+## Features
+
+- 🛠️ Complete SaaS Built From Scratch
+- 💻 Beautiful Landing Page & Pricing Page Included
+- 💳 Free & Pro Plan Using Stripe
+- 📄 A Beautiful And Highly Functional PDF Viewer
+- 🔄 Streaming API Responses in Real-Time
+- 🎨 Clean, Modern UI Using 'shadcn-ui'
+- 🚀 Optimistic UI Updates for a Great UX
+- ⚡ Infinite Message Loading for Performance
+- 📤 Intuitive Drag and Drop Uploads
+- ✨ Instant Loading States
+- 🔧 Modern Data Fetching Using tRPC & Zod
+- 🧠 LangChain for Infinite AI Memory
+- 🌲 Pinecone as our Vector Storage
+- 📊 Prisma as our ORM
+- 🔤 100% written in TypeScript
+- 🎁 ...much more
+
+## Getting started
+
+To get started with this project, run
+
+```bash
+  git clone https://github.com/siranchao/clerk.io.git
+```
+
+and copy the .env.example variables into a separate .env file, fill them out & and that's all you need to get started!
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+<br> 
+<br> 
+<br>
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Getting Started with Next.js
 
 First, run the development server:
 
