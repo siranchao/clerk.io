@@ -43,7 +43,7 @@ export function DashboardContent({ isSubscribed }: DashboardContentProps) {
 
             {/* display all user files */}
             { files && files.length > 0 ? (
-                <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
+                <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 xl:grid-cols-3">
                     {files.map((file) => (
                         <li key={file.id} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow transition hover:shadow-lg">
                             <Link href={`/dashboard/${file.id}`} className="flex flex-col gap-2">
@@ -58,28 +58,28 @@ export function DashboardContent({ isSubscribed }: DashboardContentProps) {
                             </Link>
 
                             {/* File Details section */}
-                            <div className="px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
-                                <div className="flex items-center gap-2">
+                            <div className="px-4 mt-4 flex flex-row items-center justify-between py-2 text-xs text-zinc-500">
+                                <div className="flex-1 flex items-center justify-center gap-2">
                                     <Plus className="h-4 w-4" />
-                                    {format(new Date(file.createdAt), "dd MMM yy")}
+                                    {format(new Date(file.createdAt), "dd MMM yyyy")}
                                 </div>
 
-                                <div className="flex items-center gap-2">
+                                <div className="flex-1 flex items-center justify-center gap-2">
                                     <MessageSquare className="h-4 w-4" />
                                     {file.uploadStatus === "SUCCESS" ? "Ready" : "Pending"}
                                 </div>
 
-                                <Button size="sm" className="w-full flex flex-row items-center gap-2" variant="destructive" onClick={() => deleteFile({ id: file.id })}>
-                                    {isDeleting === file.id ? (
-                                        <Loader2 className="h-4 w-4 animate-spin" />
-                                    ) : (
-                                        <Trash className="h-4 w-4" />
-                                    )}
-                                    <span>Delete</span>
-                                </Button>
+                                <div className="flex-1 flex justify-center">
+                                    <Button size="sm" className="w-1/2 flex flex-row items-center gap-2" variant="destructive" onClick={() => deleteFile({ id: file.id })}>
+                                        {isDeleting === file.id ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Trash className="h-4 w-4" />
+                                        )}
+                                    </Button>
+                                </div>
                             </div>
 
- 
                         </li>
                     ))}
                 </ul>

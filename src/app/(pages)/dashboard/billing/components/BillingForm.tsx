@@ -2,7 +2,6 @@
 import { useToast } from '@/components/ui/use-toast';
 import { getUserSubscriptionPlan } from '@/lib/stripe';
 import { trpc } from '@/app/_trpc/client';
-import MaxWidthWrapper from '@/components/layout/MaxWidthWrapper';
 import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -33,7 +32,7 @@ export default function BillingForm({ subscriptionPlan }: BillingFormProps) {
     })
 
     return (
-        <MaxWidthWrapper className='max-w-5xl'>
+        <>
             <form className='mt-12' onSubmit={(e) => {
                 e.preventDefault()
                 createStripeSession()
@@ -63,6 +62,6 @@ export default function BillingForm({ subscriptionPlan }: BillingFormProps) {
                 </Card>
 
             </form>
-        </MaxWidthWrapper>
+        </>
     )
 }

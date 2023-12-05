@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { db } from "@/db"
 import { DashboardContent } from "./components/DashboardContent"
 import { getUserSubscriptionPlan } from "@/lib/stripe"
+import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
 
 
 export default async function Dashboard() {
@@ -27,8 +28,8 @@ export default async function Dashboard() {
     const subscriptionPlan = await getUserSubscriptionPlan();
 
     return (
-        <>
+        <MaxWidthWrapper>
             <DashboardContent isSubscribed={subscriptionPlan?.isSubscribed}/>
-        </>
+        </MaxWidthWrapper>
     )
 }

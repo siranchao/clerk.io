@@ -9,7 +9,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import Navbar from '@/components/layout/Navbar'
 import TRPCProvider from '@/components/providers/TRPCProvider'
 import { Toaster } from '@/components/ui/toaster'
-import { constructMetadata } from '@/lib/metaData'
+import { constructMetadata } from '@/lib/metadata'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -28,9 +28,7 @@ export default function RootLayout({
           <body className={cn("min-h-screen font-sans antialiased grainy", inter.className)}>
             <Toaster />
             <Navbar /> 
-            <div className='mb-20 p-4'>
-              {children}
-            </div>
+            {children}
           </body>
         </TRPCProvider>
       </html>
