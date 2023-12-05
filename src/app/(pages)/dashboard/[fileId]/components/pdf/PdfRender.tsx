@@ -52,6 +52,18 @@ export function PdfRender({ url }: PdfRenderProps) {
         }
     }
 
+    const rotate = () => {
+        if(rotation === 0) {
+            setRotation(90)
+        } else if(rotation === 90) {
+            setRotation(180)
+        } else if(rotation === 180) {
+            setRotation(270)
+        } else if(rotation === 270) {
+            setRotation(0)
+        }
+    }
+
     return (
         <div className="w-full bg-white rounded-md shadow flex flex-col items-center">
             <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2">
@@ -96,7 +108,7 @@ export function PdfRender({ url }: PdfRenderProps) {
                     </Button>
                 </div>
 
-                <div className='space-x-2'>
+                <div className='flex flex-row sm:gap-x-2'>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button className='gap-1.5' aria-label='zoom' variant="ghost">
@@ -123,7 +135,7 @@ export function PdfRender({ url }: PdfRenderProps) {
                     <Button 
                         aria-label='rotate 90 degrees' 
                         variant="ghost"
-                        onClick={() => setRotation(prev => prev + 90)}
+                        onClick={() => rotate()}
                     >
                         <RotateCw className="h-4 w-4" />
                     </Button>        

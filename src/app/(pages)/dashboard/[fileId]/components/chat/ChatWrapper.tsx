@@ -79,7 +79,6 @@ export function ChatWrapper( { fileId }: ChatWrapperProps ) {
         )
     }
 
-
     return (
         <ChatContextProvider fileId={fileId}>
             <div className="relative min-h-full bg-zinc-50 flex flex-col justify-between gap-2 divide-y divide-zinc-200">

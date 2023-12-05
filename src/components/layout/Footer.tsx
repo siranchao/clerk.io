@@ -43,7 +43,7 @@ export default function Footer() {
 
                     <div className="flex flex-col justify-start items-start max-md:hidden md:w-1/3 lg:flex-1">
                         <Image src="/logo3_clerkio.png" alt="logo" width={100} height={100} className="object-contain"/>
-                        <p className="text-base text-gray-700">Clerk.io 2023 <br/> All rights reserved &copy;</p>
+                        <p className="text-base text-gray-700">Clerk.io AI Document Chatbot <br/> Developered by <Link href="https://www.siran.dev" className="text-blue-500 underline" target="_blank">Siran Cao</Link></p>
                     </div>
 
                     <div className="flex-1 grid grid-cols-3 gap-10">
