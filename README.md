@@ -4,7 +4,7 @@
 - This project is built with the TypeScript, React, Next 13.5 App Router, tRPC, Prisma & Tailwind etc.
 - App URL: [https://clerk-io.vercel.app](https://clerk-io.vercel.app/)
 
-![Project Image](https://drive.google.com/file/d/1ig2_Y3UXh0fmvqf9Z-ka89tJ9WxVYsnw/view)
+![Project Image](https://res.cloudinary.com/siran-chao/image/upload/v1701813863/Clerk.io/thumbnail_zy42h6.png)
 
 ## Features
 
