@@ -25,6 +25,10 @@
 - 🔤 100% written in TypeScript
 - 🎁 ...much more
 
+## How it works?
+
+![Mind-map](https://res.cloudinary.com/siran-chao/image/upload/v1701895174/Clerk.io/mind-map_L_xpdluq.png)
+
 ## Getting started
 
 To get started with this project, run
@@ -41,8 +45,6 @@ and copy the .env.example variables into a separate .env file, fill them out & a
 
 <br> 
 <br> 
-<br>
-
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started with Next.js
