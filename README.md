@@ -27,7 +27,7 @@
 
 ## How it works?
 
-![Mind-map](https://res.cloudinary.com/siran-chao/image/upload/v1701895174/Clerk.io/mind-map_L_xpdluq.png)
+![Mind-map](https://res.cloudinary.com/siran-chao/image/upload/v1701895525/Clerk.io/mind-map-L_s31gun.png)
 
 ## Getting started
 
