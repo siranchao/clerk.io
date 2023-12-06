@@ -28,33 +28,75 @@ export const ourFileRouter = {
         return { userId: userId, subscriptionPlan };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-        const createdFile = await db.file.create({
-            data: {
-                key: file.key,
-                name: file.name,
-                userId: metadata.userId,
-                url: `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
-                uploadStatus: "PROCESSING"
+        const fileFound = await db.file.findFirst({
+            where: {
+                key: file.key
             }
         })
 
-        try {
-            //retrieve blob file
-            const res = await fetch(`https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`)
-            const blob = await res.blob()
+        if(!fileFound) {
+            const createdFile = await db.file.create({
+                data: {
+                    key: file.key,
+                    name: file.name,
+                    userId: metadata.userId,
+                    url: `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
+                    uploadStatus: "PROCESSING"
+                }
+            })
 
-            //load pdf into memory(langchain)
-            const loader = new PDFLoader(blob)
-            const docs = await loader.load()
-            const pagesAmt = docs.length 
-
-            //check if pages number exceeded pro plan
-            const { subscriptionPlan } = metadata
-            const { isSubscribed } = subscriptionPlan
-            const isProExceeded = pagesAmt > PLANS.find(plan => plan.name === 'Pro')!.pageLimit
-            const isFreeExceeded = pagesAmt > PLANS.find(plan => plan.name === 'Free')!.pageLimit
-
-            if((isSubscribed && isProExceeded) || (!isSubscribed && isFreeExceeded)) {
+            try {
+                //retrieve blob file
+                const res = await fetch(`https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`)
+                const blob = await res.blob()
+    
+                //load pdf into memory(langchain)
+                const loader = new PDFLoader(blob)
+                const docs = await loader.load()
+                const pagesAmt = docs.length 
+    
+                //check if pages number exceeded pro plan
+                const { subscriptionPlan } = metadata
+                const { isSubscribed } = subscriptionPlan
+                const isProExceeded = pagesAmt > PLANS.find(plan => plan.name === 'Pro')!.pageLimit
+                const isFreeExceeded = pagesAmt > PLANS.find(plan => plan.name === 'Free')!.pageLimit
+    
+                if((isSubscribed && isProExceeded) || (!isSubscribed && isFreeExceeded)) {
+                    await db.file.update({
+                        data: {
+                            uploadStatus: "FAILED"
+                        },
+                        where: {
+                            id: createdFile.id
+                        }
+                    })
+                }
+    
+                //vectorize and index entire document
+                const pineconeIndex = pinecone.index("clerkio")
+    
+                const embeddings = new OpenAIEmbeddings({
+                    openAIApiKey: process.env.OPENAI_API_KEY
+                })
+    
+                //important!
+                await PineconeStore.fromDocuments(docs, embeddings, {
+                    pineconeIndex,
+                    //namespace: createdFile.id  //TODO: NEW FEATURE namespace not supported for free plan
+                })
+                
+                //update file status
+                await db.file.update({
+                    data: {
+                        uploadStatus: "SUCCESS"
+                    },
+                    where: {
+                        id: createdFile.id
+                    }
+                })
+    
+            } catch(error) {
+                console.log(error)
                 await db.file.update({
                     data: {
                         uploadStatus: "FAILED"
@@ -65,39 +107,6 @@ export const ourFileRouter = {
                 })
             }
 
-            //vectorize and index entire document
-            const pineconeIndex = pinecone.index("clerkio")
-
-            const embeddings = new OpenAIEmbeddings({
-                openAIApiKey: process.env.OPENAI_API_KEY
-            })
-
-            //important!
-            await PineconeStore.fromDocuments(docs, embeddings, {
-                pineconeIndex,
-                //namespace: createdFile.id  //TODO: NEW FEATURE namespace not supported for free plan
-            })
-            
-            //update file status
-            await db.file.update({
-                data: {
-                    uploadStatus: "SUCCESS"
-                },
-                where: {
-                    id: createdFile.id
-                }
-            })
-
-        } catch(error) {
-            console.log(error)
-            await db.file.update({
-                data: {
-                    uploadStatus: "FAILED"
-                },
-                where: {
-                    id: createdFile.id
-                }
-            })
         }
         
     }),
