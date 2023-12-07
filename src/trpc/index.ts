@@ -70,13 +70,18 @@ export const appRouter = router({
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
 
-    await utapi.deleteFiles(file.key)
-
     await db.file.delete({
       where: {
         id: file.id
       }
     })
+
+    //delete file from cloud
+    try {
+      await utapi.deleteFiles(file.key)
+    } catch (error) {
+      console.log(error)
+    }
 
     return { success: true }
   }),
